@@ -1,55 +1,40 @@
 # 💌 Be My Valentine
 
-A tiny, cute Valentine web page: open the envelope, read the letter, and try clicking “No” (spoiler: it’s… complicated 😉).
+A tiny interactive Valentine: open the envelope, read the letter, and try to click **No**.
 
-## Demo (GitHub Pages)
+**Live demo:** https://carljosef.github.io/be-my-valentine/
 
-Enable GitHub Pages and the site will be available at:
+---
 
-`https://<username>.github.io/<repo>/`
+## What this is
 
-**Setup:**
+A single-page, dependency-free mini site built with plain HTML/CSS/JS.
 
-1. Go to **Settings → Pages**
-2. **Source:** Deploy from a branch
-3. **Branch:** `main`
-4. **Folder:** `/ (root)`
-5. Save
+- In Swedish
+- Cute envelope + letter animation
+- Floating hearts
+- “No” button that refuses reality
+- “Yes” reveals the happy suprise
+- Uses `<template>` for clean DOM updates (no `innerHTML`)
 
-## Features
+---
 
-- Animated envelope + letter reveal
-- Typewriter effect for the question
-- Floating hearts in the background
-- “No” button escapes your attempts
-- “Yes” swaps to an accepted state (without `innerHTML`)
-- Supports `prefers-reduced-motion`
+## Customize (quick)
 
-## Project Structure
+- **Text:** edit `index.html`
+- **Hearts:** adjust constants in `app.js`
+- **Images:** replace files in `assets/`
+- **Language:** change language, add, change = very easy 😁🐱‍🏍
 
-├── index.html
-├── style.css
-├── app.js
-└── assets/
-├── bubuRead.gif
-├── bubuLove.gif
-└── duduFlowers.gif
+---
 
-## 🚀 Run Locally
+## Tech
 
-No build step needed.
+Vanilla HTML • CSS • JavaScript
+No build step. No dependencies.
 
-### Option A: Open the file directly
+---
 
-Just open `index.html` in your browser.
+## License
 
-### Option B: Use a local server (recommended)
-
-Some browsers are picky with local assets when opening files directly.
-
-**VS Code Live Server** is the easiest, or run a quick server:
-
-```bash
-# Python 3
-python -m http.server 8080
-```
+- MIT
