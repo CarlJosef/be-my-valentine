@@ -1,0 +1,411 @@
+/* === GLOBAL === */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  --scene-shift: 0px;
+  --letter-open-h: clamp(360px, 56svh, 460px);
+  --letter-lift: -105px;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  overflow: hidden; /* NEVER scroll the page */
+  background: radial-gradient(circle at bottom, #1b001f, #08000a);
+  font-family: "Georgia", serif;
+  color: #fff;
+
+  /* Stable centering (never changes) */
+  display: grid;
+  place-items: center;
+
+  /* Safe areas */
+  padding: max(16px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+
+  /* Tuning knobs */
+  --scene-shift: 100px; /* moves whole component down */
+  --letter-open-h: 380px;
+  --letter-lift: -130px;
+}
+
+/* === BACKGROUND HEARTS === */
+.heart {
+  position: absolute;
+  bottom: -20px;
+  font-size: 20px; /* overridden by JS, ok */
+  animation: floatUp linear infinite;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0) scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: translateY(-120svh) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* === WRAPPER === */
+.envelope-wrapper {
+  width: min(420px, 92vw);
+  display: grid;
+  place-items: center;
+
+  /* This is the ONLY vertical positioning mechanism */
+  transform: translateY(var(--scene-shift));
+  transition: transform 0.35s ease;
+}
+
+/* When opened: push scene down a bit (no scroll changes) */
+body.opened {
+  --scene-shift: 11svh;
+  --letter-open-h: clamp(440px, 65svh, 540px);
+  --letter-lift: -110px; /* less upward flight */
+}
+
+/* === ENVELOPE === */
+.envelope {
+  width: 360px;
+  height: 240px;
+  position: relative;
+  background: linear-gradient(180deg, #f06f98, #d44771);
+  border-radius: 0 0 24px 24px;
+  cursor: pointer;
+  box-shadow: 0 0 55px rgba(255, 0, 120, 0.45);
+  transform-style: preserve-3d;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+  outline: none;
+}
+
+@media (hover: hover) {
+  .envelope:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 70px rgba(255, 0, 140, 0.6);
+  }
+}
+
+.envelope:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.55),
+    0 0 70px rgba(255, 0, 140, 0.6);
+}
+
+/* === FLAP === */
+.flap {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 180px solid transparent;
+  border-right: 180px solid transparent;
+  border-bottom: 140px solid #ff7fa3;
+  transform-origin: top;
+  transition: transform 1s ease;
+  backface-visibility: hidden;
+  z-index: 2;
+}
+
+.envelope.open .flap {
+  transform: rotateX(180deg);
+}
+
+/* === SEAL === */
+.seal {
+  position: absolute;
+  top: 78px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffedf3;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.9rem;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+  z-index: 3;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+.envelope.open .seal {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-8px) scale(0.9);
+}
+
+/* === LETTER === */
+.letter {
+  position: absolute;
+  bottom: 0;
+  left: 14px;
+  right: 14px;
+
+  height: 0;
+  background: #ffffff;
+  color: #333;
+  border-radius: 24px;
+  padding: 28px;
+  overflow: hidden; /* closed state */
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+  transition:
+    height 1s ease,
+    transform 1s ease;
+}
+
+/* Open state: show letter, move it up a bit, and scroll INSIDE the letter */
+.envelope.open .letter {
+  height: var(--letter-open-h);
+  transform: translateY(var(--letter-lift));
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* === TO-LABEL === */
+.letter-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  color: #444;
+}
+
+.envelope.open .letter-label {
+  display: none;
+}
+
+/* === IMAGES === */
+.bubu {
+  width: 120px;
+  margin: 0 auto 16px;
+  display: block;
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity 0.8s ease 0.4s,
+    transform 0.8s ease 0.4s;
+}
+
+.envelope.open .bubu {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.bubu-second {
+  margin-top: 24px;
+  margin-bottom: 8px;
+  width: 140px;
+}
+
+/* === TEXT === */
+.letter h2 {
+  text-align: center;
+  margin: 8px 0 12px;
+}
+
+.letter p {
+  text-align: center;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
+.question {
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+/* === BUTTONS === */
+.buttons {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  min-height: 70px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 12px 34px;
+  border-radius: 999px;
+  border: none;
+  font-size: 1.05rem;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.yes {
+  background: #ff3366;
+  color: #ffffff;
+  box-shadow: 0 0 22px rgba(255, 51, 102, 0.7);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+@media (hover: hover) {
+  .yes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 51, 102, 0.9);
+  }
+}
+
+.no {
+  background: #444b63;
+  color: #f5f5ff;
+  position: relative;
+  left: 0;
+  top: 0;
+  box-shadow: 0 0 18px rgba(177, 12, 183, 0.812);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+@media (hover: hover) {
+  .no:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 24px rgba(180, 55, 208, 0.677);
+  }
+}
+
+/* === ACCEPTED === */
+.accepted {
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* ----------------------------------------------
+   Tablet & Smaller Screens (max-width: 900px)
+---------------------------------------------- */
+@media (max-width: 900px) {
+  body {
+    --scene-shift: 14px;
+    --letter-lift: -70px;
+
+    /* Slightly smaller open height on tablet to reduce empty space */
+    --letter-open-h: clamp(340px, 54svh, 440px);
+  }
+
+  body.opened {
+    --scene-shift: 28px;
+    --letter-lift: -62px;
+    /* IMPORTANT: do NOT increase --letter-open-h here */
+  }
+
+  .envelope-wrapper {
+    width: min(400px, 92vw);
+  }
+
+  .envelope {
+    width: min(340px, 92vw);
+    height: 225px;
+  }
+
+  .flap {
+    border-left: calc(min(340px, 92vw) / 2) solid transparent;
+    border-right: calc(min(340px, 92vw) / 2) solid transparent;
+    border-bottom: 132px solid #ff7fa3;
+  }
+
+  .letter {
+    left: 12px;
+    right: 12px;
+    padding: 24px 22px 28px;
+  }
+
+  button {
+    padding: 12px 28px;
+  }
+}
+
+/* ----------------------------------------------
+   Mobile (max-width: 768px)
+---------------------------------------------- */
+@media (max-width: 768px) {
+  body {
+    --scene-shift: 16px;
+    --letter-lift: -55px;
+
+    /* Keep it consistent (avoid the 767px jump) */
+    --letter-open-h: clamp(320px, 58svh, 420px);
+  }
+
+  body.opened {
+    --scene-shift: 34px;
+    --letter-lift: -50px;
+  }
+
+  .envelope-wrapper {
+    width: min(360px, 92vw);
+  }
+
+  .envelope {
+    width: min(320px, 92vw);
+    height: 210px;
+  }
+
+  .flap {
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-bottom: 125px solid #ff7fa3;
+  }
+
+  .letter {
+    left: 10px;
+    right: 10px;
+    padding: 22px 20px 26px;
+  }
+
+  button {
+    padding: 12px 26px;
+  }
+}
+
+/* ----------------------------------------------
+   Small Mobile (max-width: 420px)
+---------------------------------------------- */
+@media (max-width: 420px) {
+  body {
+    --scene-shift: 10px;
+    --letter-lift: -45px;
+    --letter-open-h: clamp(300px, 60svh, 390px);
+  }
+
+  body.opened {
+    --scene-shift: 26px;
+    --letter-lift: -42px;
+  }
+
+  .envelope {
+    width: min(300px, 92vw);
+    height: 200px;
+  }
+
+  .letter {
+    padding: 20px 18px 24px;
+    border-radius: 22px;
+  }
+
+  .bubu {
+    width: 108px;
+    margin-bottom: 12px;
+  }
+
+  button {
+    padding: 12px 22px;
+    font-size: 1rem;
+  }
+}

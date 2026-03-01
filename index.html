@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valentine</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+
+  <body>
+    <!-- ENVELOPE + LETTER -->
+    <main class="envelope-wrapper" aria-label="Valentine-brev">
+      <div
+        class="envelope"
+        id="envelope"
+        role="button"
+        tabindex="0"
+        aria-label="Öppna kuvertet"
+        aria-expanded="false"
+      >
+        <div class="flap" aria-hidden="true"></div>
+        <div class="seal" aria-hidden="true">💌</div>
+
+        <section class="letter" id="letter" aria-label="Brev">
+          <div class="letter-label">Till you</div>
+
+          <img
+            src="assets/bubuRead.gif"
+            class="bubu"
+            alt="Två nallar som läser"
+            id="bubuImage"
+            loading="lazy"
+          />
+
+          <h2>Min älskling</h2>
+          <p>Det finns tusen sätt att säga hur mycket du betyder för mig.</p>
+          <p>Men just IDAG vill jag bara fråga dig en viktig sak.</p>
+
+          <p id="questionText" class="question" aria-live="polite">
+            Vill du vara min speciella Valentine?
+          </p>
+
+          <div class="buttons">
+            <button class="yes" id="yesBtn" type="button">
+              Ja jag vill 💚
+            </button>
+            <button class="no" id="noBtn" type="button">
+              Nej är ur funktion 😉
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ACCEPTED STATE TEMPLATE (no innerHTML needed) -->
+    <template id="acceptedTemplate">
+      <img
+        src="assets/bubuLove.gif"
+        class="bubu"
+        alt="Nallar som kramas"
+        loading="lazy"
+      />
+      <div class="accepted">
+        <p>Jag visste det.</p>
+        <p>Det gör mig otroligt lycklig att få fira Valentine med dig 💖</p>
+      </div>
+      <img
+        src="assets/duduFlowers.gif"
+        class="bubu bubu-second"
+        alt="En nalle som ger blommor"
+        loading="lazy"
+      />
+    </template>
+  </body>
+</html>
